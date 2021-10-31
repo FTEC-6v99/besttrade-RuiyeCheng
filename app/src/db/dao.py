@@ -294,23 +294,7 @@ def buy_stock(account_id: int, ticker: str, quantity: int, purchase_price: float
         cursor.execute(sql)
         db_cnx.commit()
         db_cnx.close()
-    
-    db_cnx = get_cnx()
-    cursor = db_cnx.cursor()
-    sql: str = ('select * from account where account_number =%s;'%(v_account_id)) # look for current_bal respect to account_id
-    cursor.execute(sql) 
-    row = cursor.fetchone()
-    current_bal = row[2]
-    db_cnx.close()
-
-    db_cnx = get_cnx()
-    cursor = db_cnx.cursor()
-    used_money = quantity*purchase_price
-    updated_bal = current_bal - used_money
-    sql = 'update account set balance = %s where account_number = %s'%(updated_bal,v_account_id)#update the account balance
-    cursor.execute(sql)
-    db_cnx.commit()
-    db_cnx.close()
+        
     pass
 
 def sell_stock(account_id: int, ticker: str, quantity: int, sale_price: float) -> None:
