@@ -6,5 +6,5 @@ class Testdao(unittest.TestCase):
         investors = dao.get_all_investor()
         for investor in investors:
             print(investor.name)
-        self.assertEquals(2,len(investors))
+        self.assertEquals(4,len(investors))
         
