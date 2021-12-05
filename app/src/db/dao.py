@@ -94,10 +94,11 @@ def update_investor_name(id: int, name: str) -> None:
     '''
     db_cnx = get_cnx()
     cursor = db_cnx.cursor()
-    sql = 'update investor set name = %s where id = %s'
-    cursor.execute(sql, (id, name))
+    sql = ("update investor set name = '%s' where id = %s"%(name,id))
+    cursor.execute(sql)
     db_cnx.commit()
     db_cnx.close()
+    pass
 
 def update_investor_status(id: int, status: str) -> None:
     '''
@@ -105,10 +106,11 @@ def update_investor_status(id: int, status: str) -> None:
     '''
     db_cnx = get_cnx()
     cursor = db_cnx.cursor()
-    sql = 'update investor set status = %s where id = %s'
-    cursor.execute(sql, (id, status))
+    sql = "update investor set status = '%s' where id = %s"%(status,id)
+    cursor.execute(sql)
     db_cnx.commit()
     db_cnx.close()
+    pass
 
 '''
     Account DAO functions
@@ -125,7 +127,6 @@ def get_all_accounts() -> list[Account]:
         accounts.append(Account(row['account_number'], row['investor_id'], row['balance']))
     db_cnx.close()
     return accounts
-    pass
 
 def get_account_by_account_number(account_number: int) -> Account:
     # Code goes here
@@ -167,11 +168,11 @@ def delete_account(account_number: int) -> None:
     db_cnx.close()
     pass
 
-def update_acct_balance(balance: float, account_number: int ) -> None:
+def update_acct_balance(account_number: int, balance: float) -> None:
     # Code goes here
     db_cnx = get_cnx()
     cursor = db_cnx.cursor()
-    sql = ('update account set balance = %s where account_number = %s'%(account_number,balance))
+    sql = ('update account set balance = %s where account_number = %s'%(balance,account_number))
     cursor.execute(sql)
     db_cnx.commit()
     db_cnx.close()
@@ -242,9 +243,9 @@ def delete_portfolio(account_id: int, ticker:str) -> None:
     db_cnx.close()
     pass
 
-def buy_stock(account_id: int, ticker: str, quantity: int, purchase_price: float) -> None:
+def buy_stock(portfolio:Portfolio) -> None:
 
-    v_account_id,v_ticker,v_quantity,v_purchase_price = account_id,ticker,quantity,purchase_price
+    v_account_id,v_ticker,v_quantity,v_purchase_price = portfolio.account_id,portfolio.ticker,portfolio.quantity,portfolio.purchase_price
     # code goes here
 
     db_cnx = get_cnx()
@@ -257,8 +258,8 @@ def buy_stock(account_id: int, ticker: str, quantity: int, purchase_price: float
 
     db_cnx = get_cnx()
     cursor = db_cnx.cursor()
-    used_money = quantity*purchase_price
-    updated_bal = current_bal - used_money
+    used_money = float(v_quantity)*float(v_purchase_price)
+    updated_bal = float(current_bal) - float(used_money)
     if updated_bal < 0:
         print('You have not enough money!')
         return None
@@ -271,7 +272,7 @@ def buy_stock(account_id: int, ticker: str, quantity: int, purchase_price: float
     sql: str = 'select * from portfolio where account_id = %s and ticker = "%s"'%(v_account_id,v_ticker)
     cursor.execute(sql)
     a = cursor.fetchone()
-    if a == 0:
+    if a == None:
         db_cnx = get_cnx()
         cursor = db_cnx.cursor()
         sql: str = 'insert into portfolio (account_id, ticker, quantity, purchase_price) values (%s, "%s", %s, %s)'%(v_account_id,v_ticker,v_quantity,v_purchase_price)#create portfolio
@@ -281,7 +282,7 @@ def buy_stock(account_id: int, ticker: str, quantity: int, purchase_price: float
 
     else:
         current_quantity = a[2]
-        new_quantity = current_quantity + v_quantity
+        new_quantity = float(current_quantity) + float(v_quantity)
         db_cnx = get_cnx()
         cursor = db_cnx.cursor()
         sql: str = ('update portfolio set portfolio.quantity= %s where account_id = %s and ticker = "%s";'%(new_quantity,v_account_id,v_ticker))
@@ -297,7 +298,7 @@ def buy_stock(account_id: int, ticker: str, quantity: int, purchase_price: float
         
     pass
 
-def sell_stock(account_id: int, ticker: str, quantity: int, sale_price: float) -> None:
+def sell_stock(portfolio:Portfolio) -> None:
     # 1. update quantity in portfolio table
     # 2. update the account balance:
     # Example: 10 APPL shares at $1/share with account balance $100
@@ -305,7 +306,7 @@ def sell_stock(account_id: int, ticker: str, quantity: int, sale_price: float) -
     # output: 8 APPLE shares at $1/share with account balance = 100 + 2 * (12 - 10) = $104
 
 
-    v_account_id,v_ticker,v_quantity,v_sale_price = account_id,ticker,quantity,sale_price
+    v_account_id,v_ticker,v_quantity,v_sale_price = portfolio.account_id,portfolio.ticker,portfolio.quantity,portfolio.purchase_price
     db_cnx: MySQLConnection = get_cnx()
     cursor = db_cnx.cursor(dictionary=True) # always pass dictionary = True
     sql: str = ('select * from portfolio where account_id = %s and ticker = "%s";'%(v_account_id,v_ticker))
@@ -323,9 +324,9 @@ def sell_stock(account_id: int, ticker: str, quantity: int, sale_price: float) -
     row_a = cursor.fetchone()
     current_bal = row_a[2]
 
-    saled_money = v_quantity*v_sale_price
-    updated_bal = current_bal + saled_money
-    updated_quantity = current_quantity - v_quantity
+    saled_money = float(v_quantity)*float(v_sale_price)
+    updated_bal = float(current_bal) + float(saled_money)
+    updated_quantity = float(current_quantity) - float(v_quantity)
     if updated_quantity < 0:
         print('Your have not enough stocks to sell')
         return None

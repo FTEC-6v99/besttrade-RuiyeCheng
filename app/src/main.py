@@ -1,6 +1,7 @@
 import app.src.db.dao as dao
 from app.src.domain.Account import Account
 from app.src.domain.Investor import Investor
+from app.src.domain.Portfolio import Portfolio
 
 
 def main():
@@ -9,7 +10,7 @@ def main():
     # for investor in investors:
     #     print(f'{investor.name},{investor.status},{investor.id}')
 
-    # investor = dao.get_investor_by_id(2)
+    # investor = dao.get_investor_by_id(1)
     # print('test get_investor_by_id()')
     # if investor == None:
     #     print('id does not exist')
@@ -24,7 +25,15 @@ def main():
     #     for investor in investors:
     #         print(f'{investor.name},{investor.status},{investor.id}')
 
-    # dao.create_investor(Investor("Jo JO","Active",None))
+    # dao.update_investor_name(2,'Jo do')
+    # print('update_investor_name')
+    # investor = dao.get_investor_by_id(2)
+    # if investor == None:
+    #     print('id does not exist')
+    # else:
+    #     print(f'{investor.name},{investor.status},{investor.id}')
+
+    # dao.create_investor(Investor("Jo Doe","Active",None))
     # print('test create_investor')
     # investors = dao.get_all_investor() 
     # for investor in investors:
@@ -93,25 +102,25 @@ def main():
     # for portfolio in portfolios:
     #     print(f'{portfolio.ccount_id},{portfolio.purchase_price},{portfolio.quantity},{portfolio.ticker}')
 
-    # dao.buy_stock(1,"FB",5,10000)
-    # portfolios = dao.get_all_portfolios()
-    # print('test buy stock')
-    # for portfolio in portfolios:
-    #     print(f'{portfolio.ccount_id},{portfolio.purchase_price},{portfolio.quantity},{portfolio.ticker}')
-    # accounts = dao.get_all_accounts()
-    # print('test get_all_accounts()')
-    # for account in accounts:
-    #     print(f'{account.account_number},{account.balance},{account.investor_id}')
-
-    dao.sell_stock(1,"FB",3000,20)
+    dao.buy_stock(Portfolio(1,"FB",5,3))
     portfolios = dao.get_all_portfolios()
-    print('test sell stock')
+    print('test buy stock')
     for portfolio in portfolios:
         print(f'{portfolio.ccount_id},{portfolio.purchase_price},{portfolio.quantity},{portfolio.ticker}')
     accounts = dao.get_all_accounts()
     print('test get_all_accounts()')
     for account in accounts:
         print(f'{account.account_number},{account.balance},{account.investor_id}')
+
+    # dao.sell_stock(1,"FB",1,20)
+    # portfolios = dao.get_all_portfolios()
+    # print('test sell stock')
+    # for portfolio in portfolios:
+    #     print(f'{portfolio.ccount_id},{portfolio.purchase_price},{portfolio.quantity},{portfolio.ticker}')
+    # accounts = dao.get_all_accounts()
+    # print('test get_all_accounts()')
+    # for account in accounts:
+    #     print(f'{account.account_number},{account.balance},{account.investor_id}')
 
 
     ####################uncomment any block you would like for testing function#####################
