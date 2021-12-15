@@ -1,0 +1,37 @@
+<!doctype html>
+<title>Best Trade-Investors</title>
+
+<body>
+    <div>
+        <a href="/ui/">Home</a>
+    </div>
+    <div>
+        <h1>Investors Page</h1>
+    </div>
+    <table>
+        <tr>
+            <th>Investor ID</th>
+            <th>Investor Name</th>
+            <th>Investor Status</th>
+            <th>Action</th>
+        </tr>
+        {% for investor in investors %}
+        <tr>
+            <td>{{  investor.id  }}</td>
+            <td>{{  investor.name  }}</td>
+            <td>{{  investor.status  }}</td>
+            <td><a href="">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div>
+        <button type="button" onclick="alert('Yes!')">Destroy the world!</button>
+    </div>
+    <div>
+        <form action="/investor/create/<name>" method = "POST">
+            <label for="name">Investor Name:</label><br>
+            <input type="text" name="name"><br><br>
+            <input type="submit" value="Create Investor">
+        </form> 
+    </div>
+</body>
