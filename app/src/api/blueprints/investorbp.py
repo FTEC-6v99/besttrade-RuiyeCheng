@@ -41,13 +41,13 @@ def get_investor_by_name(name:str) -> Investor:
     except Exception as e:
         return  'Oops, an error occured:' + str(e), 500
 
-@investorbp.route('/create/<name>', methods = ['POST'])
+@investorbp.route("/create/<name>", methods = ['POST'])
 def create_investor(name):
     query_params = request.args
     status = 'ACTIVE'
     if 'status' in query_params:
         status = query_params.get('status')
-    investor = Investor(name,status)
+    investor = Investor(name,status,None)
     try:
         dao.create_investor(investor)
         return json.dumps(investor.__dict__)
